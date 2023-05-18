@@ -9,19 +9,16 @@ import {
 } from '@tremor/react';
 import MapExample from "./MapExample";
 import {useEffect, useState} from "react";
+import ButtonOutline from "../misc/ButtonOutline.";
 
 const UsersTable = ({users}) =>{
     const [marker, setMarker] = useState({lat: 0, lng: 0});
-    useEffect(()=>{
+    useEffect(() => {
         if (!navigator.geolocation) {
             alert("Geolocation is not supported by your browser");
         } else {
             navigator.geolocation.getCurrentPosition(success,error);
         }
-        // navigator.permissions.query({ name: "geolocation" }).then((result) => {
-        //     console.log(result.state)
-        //     // Don't do anything if the permission was denied.
-        // });
     },[])
     const success = (position) => {
         console.log("Latitude is :", position.coords.latitude);
@@ -31,15 +28,49 @@ const UsersTable = ({users}) =>{
     const error = () => {
         alert("Unable to retrieve your location");
     }
+    const geoFindMe = () => {
+           const status = document.querySelector("#status");
+           const mapLink = document.querySelector("#map-link");
+
+           mapLink.href = "";
+           mapLink.textContent = "";
+
+           function success(position) {
+               const latitude = position.coords.latitude;
+               const longitude = position.coords.longitude;
+
+               status.textContent = "";
+               mapLink.href = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;
+               mapLink.textContent = `Latitude: ${latitude} °, Longitude: ${longitude} °`;
+               debugger
+               console.log(mapLink.textContent)
+           }
+
+           function error() {
+               status.textContent = "Unable to retrieve your location";
+           }
+
+           if (!navigator.geolocation) {
+               status.textContent = "Geolocation is not supported by your browser";
+           } else {
+               status.textContent = "Locating…";
+               navigator.geolocation.getCurrentPosition(success, error);
+           }
+    }
 
     const RenderMap = () => {
         console.log(marker)
 
         return(
-            <MapExample center={marker} markers={[marker]}
-                        zoom={15} height={'400px'}
-                        address={"Địa chỉ:  VNPT Đồng Tháp"}
-            />
+            // <MapExample center={marker} markers={[marker]}
+            //             zoom={15} height={'400px'}
+            //             address={"Địa chỉ:  VNPT Đồng Tháp"}
+            // />
+            <div>
+                <button id="find-me" onClick={geoFindMe}>Show my location</button><br />
+                <p id="status"></p>
+                <a id="map-link" target="_blank"></a>
+            </div>
         )
     }
     return (
