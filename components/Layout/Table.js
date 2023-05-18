@@ -20,6 +20,7 @@ const UsersTable = ({users}) =>{
     const geoFindMe = () => {
         const success = (position) => {
             setMarker({lat: position.coords.latitude, lng: position.coords.longitude})
+            console.log(JSON.stringify({lat: position.coords.latitude, lng: position.coords.longitude}))
         }
         const error = () => {
             alert("Unable to retrieve your location");
@@ -35,15 +36,16 @@ const UsersTable = ({users}) =>{
         console.log(marker)
 
         return(
-            <MapExample center={marker} markers={[marker]}
-                        zoom={15} height={'400px'}
-                        address={"Địa chỉ:  VNPT Đồng Tháp"}
-            />
-            // <div>
-            //     <button id="find-me" onClick={geoFindMe}>Show my location</button><br />
-            //     <p id="status"></p>
-            //     <a id="map-link" target="_blank"></a>
-            // </div>
+
+            <div>
+                <button id="find-me" onClick={geoFindMe}>Show my location</button><br />
+                <p id="status"></p>
+                <a id="map-link" target="_blank"></a>
+                <MapExample center={marker} markers={[marker]}
+                            zoom={15} height={'400px'}
+                            address={"Địa chỉ:  VNPT Đồng Tháp"}
+                />
+            </div>
         )
     }
     return (
